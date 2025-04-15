@@ -724,6 +724,46 @@ and added support for `null` as a valid option in `enum` types.
 * Bumped lua-resty-azure to 1.6.1 to fix a `GET` request build issue,
  which was causing problems with Azure secret references.
 
+
+## 3.8.1.1
+**Release Date** 2025/04/10
+
+### Dependencies
+
+* Bumped `libexpat` from 2.6.2 to 2.6.4 to fix a crash in the `XML_ResumeParser` function caused by `XML_StopParser` stopping an uninitialized parser.
+* Bumped `lua-kong-nginx-module` from 0.11.1 to 0.11.2.
+
+### Fixes
+
+#### CLI
+
+* Fix an issue where running the `kong migration` command would fail when upgrading to 3.8, which was caused by incomplete Redis configuration-related SQL.
+
+#### Core
+
+* Fixed an issue where consistent hashing did not correctly handle hyphenated-Pascal-case headers, leading to uneven distribution of requests across upstream targets.
+* Fixed an issue where a certificate entity configured with a vault reference was occasionally not refreshed on time when initialized with an invalid string.
+* Updated the AWS Vault supported regions list to the latest available.
+
+#### Plugins
+
+* [**AppDynamics**](/hub/kong-inc/app-dynamics/) (`app-dynamics`)
+  * Fixed segmentation fault on Kong exit caused by missing destructor call.
+
+* [**LDAP Authentication Advanced**](/hub/kong-inc/ldap-auth-advanced/) (`ldap-auth-advanced`)
+  * Fixed an issue where a binary string was truncated at the first null character.
+
+* [**Session**](/hub/kong-inc/session/) (`session`)
+  * Fixed an issue where boolean configuration fields `hash_subject` (default `false`) and `store_metadata` (default `false`) stored the session's metadata in the database. This also resolves an issue with Dev Portal, where adding these fields to `portal_session_conf` wasn't working as expected.
+
+* [**Proxy Cache Advanced**](/hub/kong-inc/proxy-cache-advanced/) (`proxy-cache-advanced`)
+  * Fixed an issue where the `kong.plugins.proxy-cache-advanced.migrations` module was not being loaded when upgrading to `3.8.x.y`.
+    This issue was introduced in `3.8.0.0` and Kong refuses to start if `redis.timeout` and `redis.connect_timeout` are set to different values.
+
+* [**Rate Limiting Advanced**](/hub/kong-inc/rate-limiting-advanced/) (`rate-limiting-advanced`)
+  * Fixed an issue where the `kong.plugins.rate-limiting-advanced.migrations` module was not being loaded when upgrading to `3.8.x.y`.
+    This issue was introduced in `3.8.0.0` and Kong refuses to start if `redis.timeout` and `redis.connect_timeout` are set to different values.
+
 ## 3.8.1.0
 **Release Date** 2024/11/04
 
@@ -1336,6 +1376,27 @@ for any of the `max_*` parameters indicates unlimited.
 In some environments (such as ARM64-based environments), the default value is interpreted incorrectly.
 The plugin can erroneously block valid requests if any of the parameters continue with the default values.
 To mitigate this issue, configure the JSON Threat Protection plugin with limits for all of the `max_*` parameters.
+
+
+## 3.7.1.5
+**Release Date** 2025/04/10
+
+### Fixes
+
+#### Core
+
+* Updated the AWS Vault supported regions list to the latest available.
+
+#### Plugins
+
+* [**AppDynamics**](/hub/kong-inc/app-dynamics/) (`app-dynamics`)
+  * Fixed segmentation fault on Kong exit caused by missing destructor call.
+
+* [**LDAP Authentication Advanced**](/hub/kong-inc/ldap-auth-advanced/) (`ldap-auth-advanced`)
+  * Fixed an issue where a binary string was truncated at the first null character.
+
+* [**Session**](/hub/kong-inc/session/) (`session`)
+  * Fixed an issue where boolean configuration fields `hash_subject` (default `false`) and `store_metadata` (default `false`) stored the session's metadata in the database. This also resolves an issue with Dev Portal, where adding these fields to `portal_session_conf` wasn't working as expected.
 
 ## 3.7.1.4
 **Release Date** 2025/02/25
@@ -6909,6 +6970,25 @@ openid-connect
 * Bumped `lodash` for Dev Portal from 4.17.11 to 4.17.21
 * Bumped `lodash` for Kong Manager from 4.17.15 to 4.17.21
 
+## 2.8.4.14
+**Release Date** 2025/04/14
+
+### Features
+
+#### CLI
+
+* Added a `--lts_34_compatibility` option to the `check` command to perform a configuration compatibility check for upgrading to version 3.4.x.x.
+
+### Fixes
+
+#### Core
+
+* Requests that contain both the Content-Length and Transfer-Encoding headers are now rejected for improved security.
+
+### Dependencies
+
+* Pinned LPEG to 1.1.0 to keep the version consistent across all active branches. 
+This is not a version bump, version 1.1.0 is already in use.
 
 ## 2.8.4.13
 **Release Date** 2024/09/20
